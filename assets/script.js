@@ -8,7 +8,7 @@ searchForm.on("submit", function (event) {
     console.log(searchTerm);
 
     var apiKey = "819e5b8efc5e89edb4ff847e76d49bcd";
-    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q={cityname}&appid=" + apiKey + "&q=" + searchTerm;
+    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + searchTerm + "&APPID=" + apiKey;
      
     fetch(queryURL)
       .then(function(response){
