@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link 
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="./assets/style.css" />
+    <title>Weather App</title>
+</head>
+<body>
+    <header>
+        <h1 align="center">Weather</h1>
+        
+    </header>
+
+    <main class="container-fluid">
+        <div class="row">
+            <aside class="col-sm-3">
+                <form id="search-form">
+                    <div class="mb-3">
+                      <label for="exampleInputEmail1" class="form-label">Enter City Name</label>
+                      <input type="text" class="form-control" id="search-term" >
+                      </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+            </aside>
+            <section>Weather forcast will go here</section>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    
+        <script src="./assets/script.js"></script>
+</body>
+</html>
