@@ -1,5 +1,7 @@
 var searchForm = $("#search-form")
 var searchTermEl = $("#search-term") 
+var currentDisplay = $("#current-display")
+
 
 searchForm.on("submit", function (event) {
     event.preventDefault();
@@ -15,7 +17,14 @@ searchForm.on("submit", function (event) {
         return response.json();
     })
     .then(function (data){
-        console.log(data);
+        console.log(data.main.temp);
+
+        var tempEl = $("#temp")
+        tempEl.addClass("col-sm-4");
+        tempEl.attr(data.main.temp);
+        currentDisplay.append(tempEl);
+
+        
     });
 
 });
