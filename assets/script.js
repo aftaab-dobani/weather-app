@@ -147,5 +147,18 @@ function searchWeather(searchValue) {
     });
 }
 
+    //create new row
+    function makeRow(searchValue) {
+        var liEl = document.createElement('li');
+        liEl.classList.add('list-group-item', 'list-group-item-action');
+        liEl.id = searchValue;
+        var text = searchValue;
+        liEl.textContent = text;
 
-
+        liEl.addEventListener('click', (e) => {
+            if (e.target.tagName === 'LI') {
+                searchWeather(e.target.textContent);
+            }
+        });
+        document.getElementById('history').appendChild(liEl);
+    }
