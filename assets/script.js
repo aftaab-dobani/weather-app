@@ -94,6 +94,57 @@ function getForecast(searchValue) {
         }
       });
 
+} 
+
+//API Request 
+
+function searchWeather(searchValue) {
+    var endpoint = `http://api.openweathermap.org/data/2.5/weather?q=${searchValue}&appid=d91f911bcf2c0f925fb6535547a5ddc9&units=imperial`;
+    fetch(endpoint)
+      .then((res) => res.json())
+      .then((data) => {
+          if (!existingHistory.includes(searchValue)) {
+              handleHistory(searchValue);
+          }
+
+          todayEl = document.querySelector('#today');
+          todayEl.textContent = ' ';
+
+          var titleEl = document.createElement('h3');
+        titleEl.classList.add('card-title');
+        titleEl.textContent = `${
+          data.name
+        } (${new Date().toLocaleDateString()})`;
+        var cardEl = document.createElement('div');
+        cardEl.classList.add('card');
+        var windEl = document.createElement('p');
+        windEl.classList.add('card-text');
+        var humidEl = document.createElement('p');
+        humidEl.classList.add('card-text');
+        var tempEl = document.createElement('p');
+        tempEl.classList.add('card-text');
+        humidEl.textContent = `Humidity: ${data.main.humidity} %`;
+        tempEl.textContent = `Temperature: ${data.main.temp} °F`;
+        var cardBodyEl = document.createElement('div');
+        cardBodyEl.classList.add('card-body');
+        var imgEl = document.createElement('img');
+        imgEl.setAttribute(
+          'src',
+          `http://openweathermap.org/img/w/${data.weather[0].icon}.png`
+        );
+
+        //Append content
+        titleEl.appendChild(imgEl);
+        cardBodyEl.appendChild(titleEl);
+        cardBodyEl.appendChild(tempEl);
+        cardBodyEl.appendChild(humidEl);
+        cardBodyEl.appendChild(windEl);
+        cardEl.appendChild(cardBodyEl);
+        todayEl.appendChild(cardEl);
+
+        getForecast(searchValue);
+        getUVIndex(data.coord.lat, data.coord.lon);
+    });
 }
 
 
