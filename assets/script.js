@@ -92,17 +92,17 @@ window.addEventListener('load', function () {
     //     });
     // }
   
-    // const handleHistory = (term) => {
-    //   if (existingHistory && existingHistory.length > 0) {
-    //     var existingEntries = JSON.parse(localStorage.getItem('history'));
-    //     var newHistory = [...existingEntries, term];
-    //     localStorage.setItem('history', JSON.stringify(newHistory));
-    //     // If there is no history, create one with the searchValue and save it localStorage
-    //   } else {
-    //     historyItems.push(term);
-    //     localStorage.setItem('history', JSON.stringify(historyItems));
-    //   }
-    // };
+    const handleHistory = (term) => {
+        if (existingHistory && existingHistory.length > 0) {
+          var existingEntries = JSON.parse(localStorage.getItem('history'));
+          var newHistory = [...existingEntries, term];
+          localStorage.setItem('history', JSON.stringify(newHistory));
+          
+        } else {
+          historyItems.push(term);
+          localStorage.setItem('history', JSON.stringify(historyItems));
+        }
+      };
   
     // Function for API request
     function searchWeather(searchValue) {
@@ -151,7 +151,7 @@ window.addEventListener('load', function () {
   
         
           getForecast(searchValue);
-          getUVIndex(data.coord.lat, data.coord.lon);
+        //   getUVIndex(data.coord.lat, data.coord.lon);
         });
     }
   
