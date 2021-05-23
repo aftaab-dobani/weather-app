@@ -32,14 +32,13 @@
 
 window.addEventListener('load', function () {
     var existingHistory;
-    if (!JSON.parse(localStorage).getItem('history'))){
-        existingHistory = [];
+  if (!JSON.parse(localStorage.getItem('history'))) {
+    existingHistory = [];
+  } else {
+    existingHistory = JSON.parse(localStorage.getItem('history'));
+  }
 
-    } else {
-        existingHistory = JSON.parse(localStorage.getItem('history'));
-    }
-
-    var historyItems = []; 
+  var historyItems = [];
 
     function getForecast(searchValue) {
         if (!searchValue) {
@@ -100,96 +99,109 @@ window.addEventListener('load', function () {
               }
             }
           });
+      };
+    //API Request
+
+function searchWeather(searchValue) {
+    var endpoint = `http://api.openweathermap.org/data/2.5/weather?q=${searchValue}&appid=d91f911bcf2c0f925fb6535547a5ddc9&units=imperial`;
+    fetch(endpoint)
+      .then((res) => res.json())
+      .then((data) => {
+        if (!existingHistory.includes(searchValue)) {
+          handleHistory(searchValue);
+        }
+  
+        todayEl = document.querySelector("#today");
+        todayEl.textContent = " ";
+  
+        var titleEl = document.createElement("h3");
+        titleEl.classList.add("card-title");
+        titleEl.textContent = `${data.name} (${new Date().toLocaleDateString()})`;
+        var cardEl = document.createElement("div");
+        cardEl.classList.add("card");
+        var windEl = document.createElement("p");
+        windEl.classList.add("card-text");
+        var humidEl = document.createElement("p");
+        humidEl.classList.add("card-text");
+        var tempEl = document.createElement("p");
+        tempEl.classList.add("card-text");
+        humidEl.textContent = `Humidity: ${data.main.humidity} %`;
+        tempEl.textContent = `Temperature: ${data.main.temp} °F`;
+        var cardBodyEl = document.createElement("div");
+        cardBodyEl.classList.add("card-body");
+        var imgEl = document.createElement("img");
+        imgEl.setAttribute(
+          "src",
+          `http://openweathermap.org/img/w/${data.weather[0].icon}.png`
+        );
+  
+        //Append content
+        titleEl.appendChild(imgEl);
+        cardBodyEl.appendChild(titleEl);
+        cardBodyEl.appendChild(tempEl);
+        cardBodyEl.appendChild(humidEl);
+        cardBodyEl.appendChild(windEl);
+        cardEl.appendChild(cardBodyEl);
+        todayEl.appendChild(cardEl);
+  
+        getForecast(searchValue);
+        getUVIndex(data.coord.lat, data.coord.lon);
+      });
+  };
+
+  function makeRow(searchValue) {
+    var liEl = document.createElement("li");
+    liEl.classList.add("list-group-item", "list-group-item-action");
+    liEl.id = searchValue;
+    var text = searchValue;
+    liEl.textContent = text;
+  
+    liEl.addEventListener("click", (e) => {
+      if (e.target.tagName === "LI") {
+        searchWeather(e.target.textContent);
       }
+    });
+    document.getElementById("history").appendChild(liEl);
+  }
+  
+  if (existingHistory && existingHistory.length > 0) {
+    existingHistory.forEach((item) => makeRow(item));
+  }
+  
+  function getSearchVal() {
+    var searchValue = document.querySelector("#search-value").value;
+    if (searchValue) {
+      searchWeather(searchValue);
+      makeRow(searchValue);
+      document.querySelector("#search-value").value = "";
+    }
+  }
+  
+  //search value to search button 
+  document
+      .querySelector('#search-button')
+      .addEventListener('click', getSearchVal);
 
 }
 
 
 // Function to Get Forecast
 
+//UV Index
 
-
-
-//API Request
-
-function searchWeather(searchValue) {
-  var endpoint = `http://api.openweathermap.org/data/2.5/weather?q=${searchValue}&appid=d91f911bcf2c0f925fb6535547a5ddc9&units=imperial`;
-  fetch(endpoint)
-    .then((res) => res.json())
-    .then((data) => {
-      if (!existingHistory.includes(searchValue)) {
-        handleHistory(searchValue);
-      }
-
-      todayEl = document.querySelector("#today");
-      todayEl.textContent = " ";
-
-      var titleEl = document.createElement("h3");
-      titleEl.classList.add("card-title");
-      titleEl.textContent = `${data.name} (${new Date().toLocaleDateString()})`;
-      var cardEl = document.createElement("div");
-      cardEl.classList.add("card");
-      var windEl = document.createElement("p");
-      windEl.classList.add("card-text");
-      var humidEl = document.createElement("p");
-      humidEl.classList.add("card-text");
-      var tempEl = document.createElement("p");
-      tempEl.classList.add("card-text");
-      humidEl.textContent = `Humidity: ${data.main.humidity} %`;
-      tempEl.textContent = `Temperature: ${data.main.temp} °F`;
-      var cardBodyEl = document.createElement("div");
-      cardBodyEl.classList.add("card-body");
-      var imgEl = document.createElement("img");
-      imgEl.setAttribute(
-        "src",
-        `http://openweathermap.org/img/w/${data.weather[0].icon}.png`
-      );
-
-      //Append content
-      titleEl.appendChild(imgEl);
-      cardBodyEl.appendChild(titleEl);
-      cardBodyEl.appendChild(tempEl);
-      cardBodyEl.appendChild(humidEl);
-      cardBodyEl.appendChild(windEl);
-      cardEl.appendChild(cardBodyEl);
-      todayEl.appendChild(cardEl);
-
-      getForecast(searchValue);
-      getUVIndex(data.coord.lat, data.coord.lon);
-    });
+function getUVIndex(lat, lon) {
+    fetch(
+        `http://api.openweathermap.org/data/2.5/uvi?appid=d91f911bcf2c0f925fb6535547a5ddc9&lat=${lat}&lon=${lon}`
+    )
+    .then((res)) => res.json())
+    .then((data))
 }
+
+
+
+
+
 
 //create new row
-function makeRow(searchValue) {
-  var liEl = document.createElement("li");
-  liEl.classList.add("list-group-item", "list-group-item-action");
-  liEl.id = searchValue;
-  var text = searchValue;
-  liEl.textContent = text;
 
-  liEl.addEventListener("click", (e) => {
-    if (e.target.tagName === "LI") {
-      searchWeather(e.target.textContent);
-    }
-  });
-  document.getElementById("history").appendChild(liEl);
-}
-
-if (existingHistory && existingHistory.length > 0) {
-  existingHistory.forEach((item) => makeRow(item));
-}
-
-function getSearchVal() {
-  var searchValue = document.querySelector("#search-value").value;
-  if (searchValue) {
-    searchWeather(searchValue);
-    makeRow(searchValue);
-    document.querySelector("#search-value").value = "";
-  }
-}
-
-//search value to search button 
-document
-    .querySelector('#search-button')
-    .addEventListener('click', getSearchVal);
 
